@@ -18,7 +18,7 @@ let matchVal (theMatch: string) =
 let calVal (theLine: string) = 
     let m: MatchCollection = rx.Matches(theLine)
     //nb the inner + is to concatanate the two digit strings
-    let outSum: int = int ((matchVal (m.Item(0).Groups[1].Value)) + (matchVal (m.Item(m.Count-1).Groups[1].Value)))
+    let outSum: int = int ((matchVal (m.Item(0).Groups.[1].Value)) + (matchVal (m.Item(m.Count-1).Groups.[1].Value)))
     outSum
 
 //printfn "%d" (calVal testLine)
