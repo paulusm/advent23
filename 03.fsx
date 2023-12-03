@@ -2,6 +2,8 @@ open System.Text.RegularExpressions
 
 let inputLines = System.IO.File.ReadLines("03.txt")
 
+// Part One
+
 let rxPart: Regex = Regex(@"\d+", RegexOptions.Compiled)
 let rxSymbol: Regex = Regex(@"[^\.\d]{1}", RegexOptions.Compiled)
 
@@ -29,7 +31,7 @@ let checkAdjacency (thePart:Match) i:int =
 let getValidParts  i (partsLine:MatchCollection):int =
  
     let sumValid:int = partsLine |> Seq.map( fun part -> 
-            let symbolAdjacent:int = checkAdjacency part i + (if i > 0 then checkAdjacency part (i-1) else 0) + (if i <= 138  then checkAdjacency part (i+1) else 0)
+            let symbolAdjacent:int = checkAdjacency part i + (if i > 0 then checkAdjacency part (i-1) else 0) + (if i < (Seq.length allParts-1) then checkAdjacency part (i+1) else 0)
             match symbolAdjacent  with
             | 0 -> 0
             | _ -> int part.Value) |> Seq.sum
@@ -37,4 +39,31 @@ let getValidParts  i (partsLine:MatchCollection):int =
 
 let validParts:int = allParts |> Seq.mapi (fun i partsLine -> getValidParts i partsLine)  |> Seq.sum
 
-printfn "Total %d" validParts
+printfn "Part One Total %d" validParts
+
+// Part Two
+
+let rxStar: Regex = Regex(@"\*{1}", RegexOptions.Compiled)
+
+let allStars:List<MatchCollection> = Seq.toList (inputLines |> Seq.map(fun dataLine -> parseSchematic dataLine rxStar))
+
+let searchAroundStars i (starPos:int) = 
+    let thisLevelGears = allParts |> Seq.item i |> Seq.map(fun (part:Match) ->
+        
+        if (part.Index + part.Length) - starPos < (part.Length + 2) && (part.Index + part.Length) - starPos >=0 then              
+            int(part.Value)
+        else
+            0) 
+    thisLevelGears |> Seq.filter(fun x -> x > 0) 
+
+let getGears i starLine:int = 
+    starLine |> Seq.map(fun (starPos:Match) ->
+        let adjList = Seq.append (Seq.append (searchAroundStars i starPos.Index) (searchAroundStars (i+1) starPos.Index)) (searchAroundStars (i-1) starPos.Index)
+        let filtList = adjList |> Seq.filter(fun x -> x > 0)
+        //printfn "%A" filtList
+        if filtList |> Seq.length = 2 then (filtList |> Seq.item 0) * (filtList |> Seq.item 1) else 0
+    ) |> Seq.sum
+
+let starGearRatios = allStars |> List.mapi (fun i starLine -> getGears i starLine) |> List.sum
+
+starGearRatios |> printfn "Part Two Total %d" 
