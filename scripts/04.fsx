@@ -1,6 +1,6 @@
 open System.Text.RegularExpressions
 
-let inputLines = System.IO.File.ReadLines("04.txt")
+let inputLines = System.IO.File.ReadLines("../data/04.txt")
 
 let rxPart: Regex = Regex(@"\d+", RegexOptions.Compiled)
 

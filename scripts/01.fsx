@@ -1,7 +1,7 @@
 open System.Text.RegularExpressions
 open System
 
-let readLines: Collections.Generic.IEnumerable<string> = System.IO.File.ReadLines("01.txt");;
+let readLines: Collections.Generic.IEnumerable<string> = System.IO.File.ReadLines("../data/01.txt");;
 
 printfn "%A"  readLines
 

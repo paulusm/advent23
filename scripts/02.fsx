@@ -2,7 +2,7 @@
 
 open System.Text.RegularExpressions
 
-let inputLines = System.IO.File.ReadLines("02.txt");;
+let inputLines = System.IO.File.ReadLines("../data/02.txt");;
 
 printfn "%A"  inputLines
 

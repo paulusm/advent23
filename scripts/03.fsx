@@ -1,6 +1,6 @@
 open System.Text.RegularExpressions
 
-let inputLines = System.IO.File.ReadLines("03.txt")
+let inputLines = System.IO.File.ReadLines("../data/03.txt")
 
 // Part One
 
