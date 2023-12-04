@@ -1,5 +1,7 @@
 # Advent of Code 2023
 
+![A confused looking,  aging male geek with dark hair on a laptop in a chrismassy decorated room and wearing a christmas jumper digital art](geek.png)
+
 | Day | Status |
 |-----|--------|
 |  [1](01.fsx)  |   OK, Second part took ages     |
