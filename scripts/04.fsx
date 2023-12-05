@@ -1,6 +1,6 @@
 open System.Text.RegularExpressions
 
-let inputLines = System.IO.File.ReadLines("../data/04-test.txt")
+let inputLines = System.IO.File.ReadLines("../data/04.txt")
 
 let rxPart: Regex = Regex(@"\d+", RegexOptions.Compiled)
 
@@ -28,14 +28,16 @@ let rec matchCount (i:int) (dataLine:string) =
   let mynumMatches:MatchCollection = cardParts.[1] |> rxPart.Matches
   // This finds common numbers in the two match sequences
   let wins:int = winnumMatches |> Seq.map(fun x -> x.Value) |> Seq.filter(fun x -> mynumMatches |> Seq.exists(fun y->y.Value=x) ) |> Seq.length
-  if wins > 1 then 
-    //let recurse = [0..wins-1] |> List.map(fun x -> matchCount (i + x) (inputLines |> Seq.item x)) 
-    wins
-  else
+  
+  if wins  > 0 then
+    printfn "Line %d wins %d next line %d " i wins (i+1)
     1
+    [1..wins] |> List.map(fun x -> matchCount (i + x) (inputLines |> Seq.item (i+x)) ) |> List.reduce (fun acc x->acc+x)
+  else
+    2
 
 let allCards = inputLines |> Seq.mapi(fun i dataLine -> 
   matchCount i dataLine
 ) 
 
-printfn "Part Two- %A" allCards
+printfn "Part Two- %A" (allCards |> Seq.sum)
