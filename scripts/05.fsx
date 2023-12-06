@@ -1,6 +1,5 @@
 open System.Text.RegularExpressions
 open System.Text
-open System.Linq.Expressions
 
 
 let input = System.IO.File.ReadAllText("../data/05.txt") 
@@ -16,7 +15,7 @@ let sections = (Regex.Split(input,@":" ) |>
 // Let's convert to big int for convenience
 let lookups = sections |> Array.map(fun x -> x |> Seq.map (fun y-> int64(y.Value)))
 
-let rec lookup x theSeq = 
+let lookup x theSeq = 
      let result=(theSeq |> Seq.chunkBySize 3  |> 
                Seq.map(fun (z:array<int64>)->
                //Triple of dest, source and range length z
@@ -43,19 +42,20 @@ printfn "%A" (result |> Seq.min)
 
 // Part Two
 
-let seeds2 = (lookups.[0] |> Seq.chunkBySize(2) |> 
-     Seq.map(fun x ->[x.[0]..(x.[0] + x.[1] - 1L)]) |> 
-     Seq.toList |> List.concat)
+let seeds2chunks = lookups.[0] |> Seq.chunkBySize(2) 
+
+     Seq.map(fun x ->[x.[0]..(x.[0] + x.[1] - 1L)])) //|> 
+     //Seq.toList |> List.concat)
 
 // TODO refactor this abomination :angry:😮
-let result2 = (seeds2 |> 
-     Seq.map(fun x ->lookup x lookups.[1]) |>
-     Seq.map(fun x ->lookup x lookups.[2]) |>
-     Seq.map(fun x ->lookup x lookups.[3]) |>
-     Seq.map(fun x ->lookup x lookups.[4]) |>
-     Seq.map(fun x ->lookup x lookups.[5]) |>
-     Seq.map(fun x ->lookup x lookups.[6]) |>
-     Seq.map(fun x ->lookup x lookups.[7])
-)
+//let result2 = (seeds2 |> 
+     //Seq.map(fun x ->lookup x lookups.[1]) |>
+     // Seq.map(fun x ->lookup x lookups.[2]) |>
+     // Seq.map(fun x ->lookup x lookups.[3]) |>
+     // Seq.map(fun x ->lookup x lookups.[4]) |>
+     // Seq.map(fun x ->lookup x lookups.[5]) |>
+     // Seq.map(fun x ->lookup x lookups.[6]) |>
+     // Seq.map(fun x ->lookup x lookups.[7])
+//)
 
-printfn "%A" (result2 |> Seq.min) 
+printfn "%A" (seeds2 )//|> Seq.min) ß
