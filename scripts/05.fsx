@@ -28,7 +28,7 @@ let rec lookup x theSeq =
 
 let seeds = lookups.[0]
 
-// TODO refactor this abomination
+// TODO refactor this abomination :angry:😮
 let result = (seeds |> 
      Seq.map(fun x ->lookup x lookups.[1]) |>
      Seq.map(fun x ->lookup x lookups.[2]) |>
@@ -39,4 +39,23 @@ let result = (seeds |>
      Seq.map(fun x ->lookup x lookups.[7])
 )
 
-printfn "%A" (result |> Seq.min) // 621354867h
+printfn "%A" (result |> Seq.min) 
+
+// Part Two
+
+let seeds2 = (lookups.[0] |> Seq.chunkBySize(2) |> 
+     Seq.map(fun x ->[x.[0]..(x.[0] + x[1]-1L)]) |> 
+     Seq.toList |> List.concat)
+
+// TODO refactor this abomination :angry:😮
+let result2 = (seeds2 |> 
+     Seq.map(fun x ->lookup x lookups.[1]) |>
+     Seq.map(fun x ->lookup x lookups.[2]) |>
+     Seq.map(fun x ->lookup x lookups.[3]) |>
+     Seq.map(fun x ->lookup x lookups.[4]) |>
+     Seq.map(fun x ->lookup x lookups.[5]) |>
+     Seq.map(fun x ->lookup x lookups.[6]) |>
+     Seq.map(fun x ->lookup x lookups.[7])
+)
+
+printfn "%A" (result2 |> Seq.min) 
