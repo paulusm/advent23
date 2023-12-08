@@ -10,3 +10,4 @@
 |  [4](scripts/04.fsx)  |   Run out of time to do part 2, maybe later   |
 |  [5](scripts/05.fsx)  |   Some *bad* code. Part 1 OK, part 2 memory leak or something 🔥  |
 |  [6](scripts/06.fsx)  |   OK, eventually |
+|  [7](scripts/07.fsx)  |  part One only, using totally unsuitable approach |
