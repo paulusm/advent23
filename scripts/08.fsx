@@ -1,7 +1,7 @@
 open System.Text.RegularExpressions
 open System
 
-let input = System.IO.File.ReadLines("../data/08-test.txt") 
+let input = System.IO.File.ReadLines("../data/08.txt") 
 
 let rxInstructions: Regex = Regex(@"[RL]", RegexOptions.Compiled)
 let rxSteps: Regex = Regex(@"[A-Z]{3}", RegexOptions.Compiled)
@@ -16,23 +16,19 @@ let theStepMap:Map<string,list<string>> =
     let stepMap = stepSeq |> Seq.map(fun x -> (x.[0].Value, [x.[1].Value; x.[2].Value])) |> Map.ofSeq
     stepMap
 
-let rec stepCount (lastStep:string) (accSteps:int):int = 
+let stepJump (theSide:string) (lastStep:string) (accSteps:int) = 
     let keyMatch:list<string> = theStepMap |> Map.find lastStep
-    let theSide:string = instructions.[0].Value
     let nextStep = keyMatch.[if theSide = "L" then 0 else 1]
-    let iterSteps = instructions |> Seq.mapi(fun i x-> 
-        let nextStep = keyMatch.[if theSide = "L" then 0 else 1]
-        let keyMatch:list<string> = theStepMap |> Map.find nextStep
-        nextStep) 
-    let takenSteps = iterSteps |> Seq.takeWhile (fun s -> not (s = "ZZZ")) 
-    let instructionCount = Seq.length instructions
-    let lastStep:string = Seq.last takenSteps
-    printfn "%s" lastStep
-    let interimStepCount:int = Seq.length takenSteps
-    printfn "%d %d" interimStepCount instructionCount
-    if interimStepCount < instructionCount then
-         interimStepCount + accSteps
+    printfn "Choice - %s Last - %s Next -%s" theSide lastStep nextStep
+    nextStep
+
+let rec iterSteps initInstruction initCode accSteps = 
+    let startPoint = if initInstruction = (Seq.length instructions) then 0 else initInstruction
+    let theSide:Match = instructions |> Seq.item startPoint
+    let theNextStep = stepJump theSide.Value initCode accSteps
+    if theNextStep = "ZZZ"
+        then accSteps + 1
     else
-         interimStepCount + accSteps //stepCount lastStep accSteps + interimStepCount
-    
-printfn "Part One Result %A" (stepCount "AAA" 0)
+        iterSteps (startPoint + 1) theNextStep accSteps + 1
+
+printfn "Part One Result %A" (iterSteps 0 "AAA" 0)
