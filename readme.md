@@ -11,3 +11,4 @@
 |  [5](scripts/05.fsx)  |   Some *bad* code. Part 1 OK, part 2 memory leak or something 🔥  |
 |  [6](scripts/06.fsx)  |   OK, eventually |
 |  [7](scripts/07.fsx)  |  part One only, part Two didnt work (too low) |
+|  [8](scripts/08.fsx)  |  part One only, Took a VERY HUGE amount of time and stupidity |
