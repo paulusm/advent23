@@ -12,3 +12,4 @@
 |  [6](scripts/06.fsx)  |   OK, eventually |
 |  [7](scripts/07.fsx)  |  part One only, part Two didnt work (too low) |
 |  [8](scripts/08.fsx)  |  part One only, Took a VERY HUGE amount of time and stupidity |
+|  [9](scripts/09.fsx)  |  part One only so far, part Two looks feasible though |
