@@ -13,11 +13,14 @@ let possMoves (theStartPos:list<int>) =
         possPos
     ) |> List.filter(fun x-> x.[0] > -1 && x.[1] > -1)
 
-let rec moveCount (thePos:list<int>)  =
+let rec moveCount (thePos:list<int>) (theAggregateStepCount:list<int>):list<list<int>>   =
     let moveOptions = possMoves thePos
     moveOptions |> List.map(fun x ->
-        printfn $"Move %s{(theMap.[x.[0],x.[1]]).ToString()}"
-        x
-    )
+        let moveChar = theMap.[x.[0],x.[1]]
+        printfn $"Move %s{(moveChar).ToString()}"
+        match moveChar with
+        | '.' -> List.append theAggregateStepCount [0]
+        | _ ->   List.append theAggregateStepCount [1] //(moveCount x [(theAggregateStepCount + 1)]]
+    ) 
 
-printfn "%A" (moveCount startPos)
+printfn "%A" (moveCount startPos [1])
