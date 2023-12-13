@@ -13,7 +13,7 @@ let possMoves (theStartPos:list<int>) (thePathHistory:list<list<int>>) =
         possPos
     ) |> List.filter(fun x-> x.[0] > -1 && x.[1] > -1 && not(List.contains theStartPos thePathHistory))
 
-let rec moveCount (thePos:list<int>) (pathHist:list<list<int>>):list<list<int>>   =
+let rec moveCount (thePos:list<int>) (pathHist:list<list<int>>)  =
     let pathHistRet = List.insertAt 0 thePos pathHist
     let moveOptions = possMoves thePos pathHist
     moveOptions |> List.map(fun x ->
@@ -21,7 +21,7 @@ let rec moveCount (thePos:list<int>) (pathHist:list<list<int>>):list<list<int>> 
         printfn $"Move %s{(moveChar).ToString()}"
         match moveChar with
         | '.' -> pathHistRet
-        | _ ->   List.append pathHistRet [1] //(moveCount x [(theAggregateStepCount + 1)]]
+        | _ ->  List,insertAt 0 moveCount x pathHistRet
     ) 
 
 printfn "%A" (moveCount startPos [])
