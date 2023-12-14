@@ -13,3 +13,6 @@
 |  [7](scripts/07.fsx)  |  part One only, part Two didnt work (too low) |
 |  [8](scripts/08.fsx)  |  part One only, Took a VERY HUGE amount of time and stupidity |
 |  [9](scripts/09.fsx)  |  part One only so far, part Two looks feasible though |
+|  [10](scripts/10.fsx)  |  Stuck |
+|  [9](scripts/11.fsx)  |  Stuck |
+|  [9](scripts/09.fsx)  | Part 1 OK. Part two hard.. |
