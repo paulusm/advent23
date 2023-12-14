@@ -14,5 +14,6 @@
 |  [8](scripts/08.fsx)  |  part One only, Took a VERY HUGE amount of time and stupidity |
 |  [9](scripts/09.fsx)  |  part One only so far, part Two looks feasible though |
 |  [10](scripts/10.fsx)  |  Stuck |
-|  [9](scripts/11.fsx)  |  Stuck |
-|  [9](scripts/09.fsx)  | Part 1 OK. Part two hard.. |
+|  [11](scripts/11.fsx)  |  Stuck |
+|  [12](scripts/12.fsx)  |  Not yet attempted |
+|  [13](scripts/13.fsx)  | Part 1 OK. Part two hard.. |
