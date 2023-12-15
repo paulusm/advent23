@@ -5,16 +5,18 @@ let inputData = System.IO.File.ReadLines("../data/12-test.txt")
 let rec runMatches  (theString:string) (theNo:string) (theLastPos:int) = 
     let theTestString = theString[theLastPos..]
     printfn "%d" theLastPos
-    let reTest =  Regex ("([#?]{" + theNo + "})(^#|$)")
+    let reTest =  Regex (@"([#]{" + theNo + "})(^#*|$)")
     let hashMatch = reTest.Match theTestString
+    let cap1 = hashMatch.Groups.[1]
     printfn "%A" hashMatch.Groups.[1]
     if not hashMatch.Success then
-        let reTest2 =  Regex ("([#?]{" + theNo + "})[.$]{1}")
+        let reTest2 =  Regex (@"([#|\?]{" + theNo + "})[.$]{1}")
         let varMatch = reTest2.Match theTestString 
-        printfn "%A" varMatch.Groups.[1]
-        (varMatch.Groups.[1].Index + varMatch.Groups.[1].Value.Length-1, varMatch.Groups.[1].Value)
+        printfn "%A" varMatch
+        let cap2 = varMatch.Groups.[1]
+        (cap2.Index + cap2.Value.Length-1, cap2.Value)
     else
-        (hashMatch.Groups.[1].Index + hashMatch.Groups.[1].Value.Length-1, hashMatch.Groups.[1].Value)
+        (cap1.Index + cap1.Value.Length-1, cap1.Value)
 
 let result = inputData |> Seq.map(fun x ->
     let springLine = x.Split ' '
