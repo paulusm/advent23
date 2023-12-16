@@ -15,5 +15,7 @@
 |  [9](scripts/09.fsx)  |  part One only so far, part Two looks feasible though |
 |  [10](scripts/10.fsx)  |  Stuck |
 |  [11](scripts/11.fsx)  |  Stuck |
-|  [12](scripts/12.fsx)  |  Not yet attempted |
+|  [12](scripts/12.fsx)  |  REGEX may not be the way |
 |  [13](scripts/13.fsx)  | Part 1 OK. Part two hard.. |
+|  [14](scripts/14.fsx)  |  not yet tried |
+|  [15](scripts/15.fsx)  | Part One OK |
