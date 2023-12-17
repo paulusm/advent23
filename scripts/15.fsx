@@ -1,6 +1,6 @@
 open System.Text.RegularExpressions
 
-let inputData = System.IO.File.ReadAllText("../data/15-test.txt") 
+let inputData = System.IO.File.ReadAllText("../data/15.txt") 
 
 let steps = inputData.Split(',')
 
@@ -30,10 +30,13 @@ let rxInstruction = Regex(@"([a-z]+)([=-])(\d*)", RegexOptions.Compiled)
 
 let doRemove (lensMap:Map<int,string* string>) (theLens:string) = 
     let mapKeys = lensMap.Keys
-    let theKey = (mapKeys |> Seq.map(fun x->
-        let (lensName,lensVal) = lensMap[x]
-        if lensName = theLens then x else 0) |> Seq.max)
-    lensMap.Remove theKey 
+    if mapKeys |> Seq.length = 0 then 
+        lensMap
+    else
+        let theKey = (mapKeys |> Seq.map(fun x->
+            let (lensName,lensVal) = lensMap[x]
+            if lensName = theLens then x else 0) |> Seq.max)
+        lensMap.Remove theKey 
 
 let doAdd (lensMap:Map<int,string* string>) (theNewKey:int) (theNewVal:string * string)=
     let mapKeys = lensMap.Keys
@@ -67,6 +70,17 @@ let boxMap:Map<int,Map<int,string * string>> =
         Map.remove boxNum acc |> Map.add boxNum boxContents 
     else 
         Map.add boxNum boxContents acc)
-    
 
-printfn "Part 2 - %A" (boxMap)
+let result2 = 
+    boxMap |> Map.keys |> Seq.map(fun x->
+    let theLensMap = boxMap[x]
+    let theLensScore = 
+        theLensMap |> Map.values |> Seq.mapi(fun i y->
+            //printfn "%A" y
+            let(lens,focal) = y
+            (i+1) * int focal
+        ) |> Seq.sum
+    theLensScore * (x+1) 
+    ) |> Seq.sum
+
+printfn "Part 2 - %A" (result2)

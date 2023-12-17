@@ -18,4 +18,4 @@
 |  [12](scripts/12.fsx)  |  REGEX may not be the way |
 |  [13](scripts/13.fsx)  | Part 1 OK. Part two hard.. |
 |  [14](scripts/14.fsx)  |  not yet tried |
-|  [15](scripts/15.fsx)  | Part One OK |
+|  [15](scripts/15.fsx)  | Part One OK, Part 2 a Killer from Manila |
