@@ -1,15 +1,15 @@
 open System.Text.RegularExpressions
 
-let planRaw:seq<string> = System.IO.File.ReadLines("../data/18.txt")
+let planRaw:seq<string> = System.IO.File.ReadLines("../data/18-test.txt")
 
 //printfn "%d lines read" (planRaw |> Seq.length)
 let rxData: Regex = Regex(@"([RDLU]) (\d+) \((#[0-9a-z]{6})\)", RegexOptions.Compiled)
 
-let planSize = 440
+let planSize = 10 //440
 
 let lavaPlan = Array2D.init planSize planSize (fun x y->0)
 
-let mutable initPos = (210,50)
+let mutable initPos = (0,0) //(210,50)
 
 let createPath (moveX, moveY) startPos =
     let (initX, initY) = startPos
@@ -38,30 +38,35 @@ let parsedPlan =
     )
 
 let rec scanSegment (theSegment:int[]) (theRow:int) =
-    let fromEdge = theSegment |> Array.tryFindIndex(fun x->x=1)
-    let toEdge = theSegment|> Array.tryFindIndexBack(fun x->x=1)
-    match (fromEdge,toEdge) with
-    | (Some a ,Some b) -> 
-        if theSegment.[a+1..b-1] |> Array.filter(fun e->e=1) |> Array.length = 0 then
-            let doFill = [a..b] |> List.map (fun y ->lavaPlan[theRow,y]<-1)
-            b - a + 1
-        else
-            scanSegment theSegment.[a+1..b-1] theRow
+    let fromEdge = theSegment |> Array.tryFindIndex(fun x->x=1)    
+    match fromEdge with
+    | Some a -> 
+        let toEdge = theSegment[a+1..] |> Array.tryFindIndex(fun x->x=1)
+        match toEdge with
+        | Some b ->
+           // printfn "%d %d" a (b+a)
+            ([a..(b+a)] |> List.map (
+                fun y ->
+                    lavaPlan[theRow,y]<-1
+                    1
+            )|> List.sum  ) +  scanSegment theSegment.[b + 1..] theRow
+        | _ -> 1
     | _ -> 0
 
 let fillMiddle =
-    [0..planSize-1] |> List.map (fun x-> 
+    //[0..planSize-1] 
+    [0..planSize-1]  |> List.map (fun x-> 
         //printfn "number of edges at row %d %d" x (lavaPlan[x,*] |> Array.filter(fun x->x=1)|> Array.length)
         // TODO: cant just fill from first to last, as multiple parts
         let segment = lavaPlan[x,*]
         let lavaCount = scanSegment segment x
         lavaCount
-    ) 
+    )  
 
 
 
 parsedPlan
 //59998 too high 59616 too high
-printfn "%A" (fillMiddle |> List.sum)
+printfn "%A" (fillMiddle|> List.sum)
 
-//printfn "%A" (lavaPlan)
+printfn "%A" (lavaPlan)
