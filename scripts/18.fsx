@@ -37,36 +37,25 @@ let parsedPlan =
         initPos
     )
 
-let rec scanSegment (theSegment:int[]) (theStartPos:int)  (theRow:int) =
-    let fromEdge = theSegment |> Array.tryFindIndex(fun x->x=1)    
-    match fromEdge with
-    | Some a -> 
-        let toEdge = theSegment[a+1..] |> Array.tryFindIndex(fun x->x=1)
-        match toEdge with
-        | Some b ->
-            //printfn "segment %A" theSegment
-            //printfn "from %d to %d" a (b+a)
-            ([a..(b+a)] |> List.map (
-                fun y ->
-                    lavaPlan[theRow,y+theStartPos]<-1
-                    1
-            )|> List.sum  ) +  scanSegment (theSegment.[b + a + 1..]) (b + a + 1) theRow
-        | _ -> 1
-    | _ -> 0
+let isEnclosed a b :bool = 
+    let n = [0..planSize-b-1] |> List.map(fun i->if lavaPlan.[a,b+i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    let s = [0..b] |> List.map(fun i->if lavaPlan.[a,b-i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    let e = [0..planSize-a-1] |> List.map(fun i->if lavaPlan.[a+i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    let w = [0..a] |> List.map(fun i->if lavaPlan.[a-i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    n && s && w && e 
+
 
 let fillMiddle =
     //[0..planSize-1] 
-    [0..planSize-1]   |> List.map (fun x-> 
-        //printfn "number of edges at row %d %d" x (lavaPlan[x,*] |> Array.filter(fun x->x=1)|> Array.length)
-        // TODO: cant just fill from first to last, as multiple parts
-        let segment = lavaPlan[x,*]
-        let lavaCount = scanSegment segment 0 x
-        lavaCount
-    )  
+    [0..planSize-1]   |> List.map (fun x->
+        [0..planSize-1]   |> List.map (fun y-> 
+            match isEnclosed x y with
+            | true -> 1
+            | false ->0
+        ) |> List.sum
+    )  |> List.sum
 
-
-parsedPlan
-//59998 too high 
-printfn "%A" (fillMiddle |> List.sum)
+//59998 too high 56751 too high. Not 55518
+printfn "%A" (fillMiddle)
 
 //rintfn "%A" (lavaPlan)
