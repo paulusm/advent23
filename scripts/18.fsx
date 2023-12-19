@@ -5,7 +5,7 @@ let planRaw:seq<string> = System.IO.File.ReadLines("../data/18.txt")
 //printfn "%d lines read" (planRaw |> Seq.length)
 let rxData: Regex = Regex(@"([RDLU]) (\d+) \((#[0-9a-z]{6})\)", RegexOptions.Compiled)
 
-let planSize = 40
+let planSize = 440
 
 let lavaPlan = Array2D.init planSize planSize (fun x y->0)
 
@@ -37,18 +37,28 @@ let parsedPlan =
         initPos
     )
 
+let rec scanSegment (theSegment:int[]) (theRow:int) =
+    let fromEdge = theSegment |> Array.tryFindIndex(fun x->x=1)
+    let toEdge = theSegment|> Array.tryFindIndexBack(fun x->x=1)
+    match (fromEdge,toEdge) with
+    | (Some a ,Some b) -> 
+        if theSegment.[a+1..b-1] |> Array.filter(fun e->e=1) |> Array.length = 0 then
+            let doFill = [a..b] |> List.map (fun y ->lavaPlan[theRow,y]<-1)
+            b - a + 1
+        else
+            scanSegment theSegment.[a+1..b-1] theRow
+    | _ -> 0
+
 let fillMiddle =
     [0..planSize-1] |> List.map (fun x-> 
-        printfn "number of edges at row %d %d" x (lavaPlan[x,*] |> Array.filter(fun x->x=1)|> Array.length)
+        //printfn "number of edges at row %d %d" x (lavaPlan[x,*] |> Array.filter(fun x->x=1)|> Array.length)
         // TODO: cant just fill from first to last, as multiple parts
-        let fromEdge = lavaPlan[x,*] |> Array.tryFindIndex(fun x->x=1)
-        let toEdge = lavaPlan[x,*] |> Array.tryFindIndexBack(fun x->x=1)
-        match (fromEdge,toEdge) with
-        | (Some a ,Some b) -> 
-            //let doFill = [a..b] |> List.map (fun y ->lavaPlan[x,y]<-1)
-            b - a + 1
-        | _ -> 0
+        let segment = lavaPlan[x,*]
+        let lavaCount = scanSegment segment x
+        lavaCount
     ) 
+
+
 
 parsedPlan
 //59998 too high 59616 too high
