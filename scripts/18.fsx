@@ -40,29 +40,18 @@ let parsedPlan =
         initPos
     ) 
 
-let isEnclosed a b :bool = 
-    let n = [0..planSize-b-1] |> List.map(fun i->if lavaPlan.[a,b+i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
-    let s = [0..b] |> List.map(fun i->if lavaPlan.[a,b-i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
-    let e = [0..planSize-a-1] |> List.map(fun i->if lavaPlan.[a+i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
-    let w = [0..a] |> List.map(fun i->if lavaPlan.[a-i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
-    n && s && w && e 
-
-
 let rec fillMiddle startX startY =
     match lavaPlan.[startX, startY] with
     | 1 -> 0
     | 2 -> 0
     | _ ->
-        match isEnclosed startX startY with
-        | false -> 0
-        | _  ->  
-            lavaPlan.[startX,startY] <- 2
-            1 + fillMiddle (startX+1) startY + fillMiddle startX (startY+1) + fillMiddle (startX-1) startY + fillMiddle startX (startY-1)
-            
-
+        lavaPlan.[startX,startY] <- 2
+        1 + fillMiddle (startX+1) startY + fillMiddle startX (startY+1) + fillMiddle (startX-1) startY + fillMiddle startX (startY-1)
+        
 
 printfn "%d" (fillMiddle 200 200 + List.sum edgeLength)
 
+// Just draw the plan for debugging purposes
 let theLines:string[] = [|0..planSize-1|] |> Array.map(fun x ->
     let theLine:string = lavaPlan.[x,*] |> Array.map(fun x ->string x) |> String.concat ""
     theLine
