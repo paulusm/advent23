@@ -42,6 +42,7 @@ let isEnclosed a b :bool =
     let s = [0..b] |> List.map(fun i->if lavaPlan.[a,b-i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
     let e = [0..planSize-a-1] |> List.map(fun i->if lavaPlan.[a+i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
     let w = [0..a] |> List.map(fun i->if lavaPlan.[a-i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    //if n && s && w && e then lavaPlan.[a,b] <- 1
     n && s && w && e 
 
 
@@ -51,11 +52,16 @@ let fillMiddle =
         [0..planSize-1]   |> List.map (fun y-> 
             match isEnclosed x y with
             | true -> 1
-            | false ->0
+            | false -> 0
         ) |> List.sum
     )  |> List.sum
+
 
 //59998 too high 56751 too high. Not 55518
 printfn "%A" (fillMiddle)
 
-//rintfn "%A" (lavaPlan)
+let theLines:string[] = [|0..planSize-1|] |> Array.map(fun x ->
+    let theLine:string = lavaPlan.[x,*] |> Array.map(fun x ->string x) |> String.concat ""
+    theLine
+)
+System.IO.File.WriteAllLines ("../data/18-plan.txt", theLines)
