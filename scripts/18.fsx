@@ -37,28 +37,28 @@ let parsedPlan =
         initPos
     )
 
-let isEnclosed a b :bool = 
-    let n = [0..planSize-b-1] |> List.map(fun i->if lavaPlan.[a,b+i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
-    let s = [0..b] |> List.map(fun i->if lavaPlan.[a,b-i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
-    let e = [0..planSize-a-1] |> List.map(fun i->if lavaPlan.[a+i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
-    let w = [0..a] |> List.map(fun i->if lavaPlan.[a-i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
-    //if n && s && w && e then lavaPlan.[a,b] <- 1
-    n && s && w && e 
+let rec isOutside a b move:int = 
 
+    let moveX, moveY = move
+    try
+        let theScore = if lavaPlan.[a+moveX,b+moveY]=0 then lavaPlan.[a,b+1] <- 2; 1 else 0
+        match theScore with
+        | 0 -> 0
+        | 1 -> 1 + isOutside  (a+moveX) (b+moveY) (0,1) + 
+                isOutside (a+moveX) (b+moveY) (1,0) +
+                isOutside (a+moveX) (b+moveY) (0,-1) +
+                isOutside (a+moveX) (b+moveY) (-1,0) 
+    with 
+    | :? System.IndexOutOfRangeException -> 0 
+    
 
-let fillMiddle =
-    //[0..planSize-1] 
-    [0..planSize-1]   |> List.map (fun x->
-        [0..planSize-1]   |> List.map (fun y-> 
-            match isEnclosed x y with
-            | true -> 1
-            | false -> 0
-        ) |> List.sum
-    )  |> List.sum
+let floodOutside =
+    isOutside 0 0 (1,0)
+
 
 
 //59998 too high 56751 too high. Not 55518
-printfn "%A" (fillMiddle)
+printfn "%A" (planSize * planSize - floodOutside)
 
 let theLines:string[] = [|0..planSize-1|] |> Array.map(fun x ->
     let theLine:string = lavaPlan.[x,*] |> Array.map(fun x ->string x) |> String.concat ""
