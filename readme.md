@@ -19,3 +19,6 @@
 |  [13](scripts/13.fsx)  | Part 1 OK. Part two hard.. |
 |  [14](scripts/14.fsx)  | Part 1 OK. Part two feasible, not yet attempted |
 |  [15](scripts/15.fsx)  | Part One OK, Part 2 a Killer from Manila |
+|  [16] | Not yet attempted |
+|  [17] | Not yet attempted|
+|  [18](scripts/18.fsx)  | Got part 1 after multiple attempts and failures. Part 2 looks like stack overflow city|

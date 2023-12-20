@@ -20,11 +20,14 @@ let createPath (moveX, moveY) startPos =
         | _ -> (if moveX > 0 then[initX..initX+moveX] else [initX+moveX..initX])|> List.map(fun x->lavaPlan[x, initY]<-1) 
     (initX + moveX, initY + moveY)
 
+let mutable edgeLength = []
+
 let parsedPlan = 
     planRaw |> Seq.toList |> List.map(fun x->
         let planElements = x |> rxData.Match 
         let digDirection = planElements.Groups.[1].Value 
         let digDistance = int(planElements.Groups.[2].Value)
+        edgeLength <-edgeLength |> List.insertAt 0 digDistance
         let digColour =  planElements.Groups.[3].Value
         let newPos = 
             match digDirection with
@@ -35,33 +38,33 @@ let parsedPlan =
             | _ -> (0,0)
         initPos <- newPos
         initPos
-    )
+    ) 
 
-let rec isOutside a b move:int = 
-
-    let moveX, moveY = move
-    try
-        let theScore = if lavaPlan.[a+moveX,b+moveY]=0 then lavaPlan.[a,b+1] <- 2; 1 else 0
-        match theScore with
-        | 0 -> 0
-        | 1 -> 1 + isOutside  (a+moveX) (b+moveY) (0,1) + 
-                isOutside (a+moveX) (b+moveY) (1,0) +
-                isOutside (a+moveX) (b+moveY) (0,-1) +
-                isOutside (a+moveX) (b+moveY) (-1,0) 
-    with 
-    | :? System.IndexOutOfRangeException -> 0 
-    
-
-let floodOutside =
-    isOutside 0 0 (1,0)
+let isEnclosed a b :bool = 
+    let n = [0..planSize-b-1] |> List.map(fun i->if lavaPlan.[a,b+i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    let s = [0..b] |> List.map(fun i->if lavaPlan.[a,b-i]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    let e = [0..planSize-a-1] |> List.map(fun i->if lavaPlan.[a+i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    let w = [0..a] |> List.map(fun i->if lavaPlan.[a-i,b]=1  then  true else false) |> List.reduce(fun acc x-> acc || x)
+    n && s && w && e 
 
 
+let rec fillMiddle startX startY =
+    match lavaPlan.[startX, startY] with
+    | 1 -> 0
+    | 2 -> 0
+    | _ ->
+        match isEnclosed startX startY with
+        | false -> 0
+        | _  ->  
+            lavaPlan.[startX,startY] <- 2
+            1 + fillMiddle (startX+1) startY + fillMiddle startX (startY+1) + fillMiddle (startX-1) startY + fillMiddle startX (startY-1)
+            
 
-//59998 too high 56751 too high. Not 55518
-printfn "%A" (planSize * planSize - floodOutside)
+
+printfn "%d" (fillMiddle 200 200 + List.sum edgeLength)
 
 let theLines:string[] = [|0..planSize-1|] |> Array.map(fun x ->
     let theLine:string = lavaPlan.[x,*] |> Array.map(fun x ->string x) |> String.concat ""
     theLine
 )
-System.IO.File.WriteAllLines ("../data/18-plan.txt", theLines)
+System.IO.File.WriteAllLines ("../data/18-plan-filled.txt", theLines)
