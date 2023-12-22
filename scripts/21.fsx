@@ -28,8 +28,8 @@ let rec moveStep (thePos:list<int>) theMax =
             //printfn "%d" (theMax-1)
             match farmPlan.[x.[0],x.[1]] with
             | c when not (c='#') && not (c='O') -> 
-                farmPlan[thePos.[0],thePos.[1]] <- '.'
-                farmPlan.[x.[0],x.[1]] <- 'O' 
+                //farmPlan[thePos.[0],thePos.[1]] <- '.'
+                //farmPlan.[x.[0],x.[1]] <- 'O' 
                 moveStep [x.[0];x.[1]] (theMax-1)
             | _ -> 0
         with
@@ -39,6 +39,6 @@ let rec moveStep (thePos:list<int>) theMax =
 
 //not 1089, too low
 printfn "%A" (moveStep startPos 6)
-farmPlan.[startPos.[0],startPos.[1]] <- 'S'
+//farmPlan.[startPos.[0],startPos.[1]] <- 'S'
 
 printfn "%A" farmPlan 
