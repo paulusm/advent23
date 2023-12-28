@@ -39,7 +39,7 @@ let trajCombinations = (combinations [] 2 (Seq.toList trajectories)) |> Seq.map(
     let b:float = ma * a + ca
     //[xa;ya;xb;yb;a;b;ma;mb;(if a >= 7 && a <= 27 && b >=7 && b <= 27 then 1 else 0)]
 
-    if ((xa-xb)**2 + (ya-yb) **2 > (xa2-xb2)**2 + (ya2-yb2)**2) && (a >= 200000000000000.0 && a <= 400000000000000.0 && b >= 200000000000000.0 && b <= 400000000000000.0) then
+    if (xa2<xa && ya2<ya && xb2<xb && yb2<yb ) && (a >= 200000000000000.0 && a <= 400000000000000.0 && b >= 200000000000000.0 && b <= 400000000000000.0) then
         1
     else
         0
